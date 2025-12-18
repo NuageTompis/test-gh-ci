@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+  env_var: ${{ vars.TEST_REPO_VARIABLE }}
 
 jobs:
   test_caching:
@@ -38,4 +38,4 @@ jobs:
         if: steps.cache-nodejs-modules.outputs.cache-hit == 'true'
         run: echo "cache hit!"
       - name: echo variable
-        run: echo "variable is -> $TEST_REPO_VARIABLE"
+        run: echo "variable is -> $env_var"
