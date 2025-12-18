@@ -7,3 +7,28 @@ jobs:
     steps:
       - name: greet
         run: echo "hello everyone"
+
+  test_caching:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache Node.js modules
+        id: cache-nodejs-modules
+        uses: actions/cache@v4 # not used in dkt -> check others
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-npm-bruno-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-bruno-
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: install dependencies
+        run: npm ci
+      - name: output-cache-miss
+        if: steps.cache-nodejs-modules.outputs.cache-hit != 'true'
+        run: echo "cache missed!"
+      - name: output-cache-hit
+        if: steps.cache-nodejs-modules.outputs.cache-hit == 'true'
+        run: echo "cache missed!"
