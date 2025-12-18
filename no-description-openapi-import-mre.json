@@ -1,0 +1,43 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "No description in openapi import MRE",
+    "version": "1.0.27"
+  },
+  "servers": [{ "url": "/api/v3" }],
+  "paths": {
+    "/pet": {
+      "put": {
+        "tags": ["pet"],
+        "summary": "Create a pet",
+        "description": "<DESCRIPTION WHICH IS IGNORED ON IMPORT>",
+        "operationId": "createPet",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Pet" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "required": [],
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" }
+        }
+      }
+    }
+  }
+}
