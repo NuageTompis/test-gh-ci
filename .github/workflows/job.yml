@@ -27,4 +27,4 @@ jobs:
         run: echo "cache missed!"
       - name: output-cache-hit
         if: steps.cache-nodejs-modules.outputs.cache-hit == 'true'
-        run: echo "cache missed!"
+        run: echo "cache hit!"
