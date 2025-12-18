@@ -25,7 +25,7 @@ jobs:
       - name: import openapi collection to bruno
         run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
       - name: log collection md5 hash
-        run: md5 collection-output.json
+        run: apt install md5 && md5 collection-output.json
       - name: output-cache-miss
         if: steps.cache-nodejs-modules.outputs.cache-hit != 'true'
         run: echo "cache missed!"
