@@ -1,0 +1,9 @@
+name: test gh actions
+on: push
+
+jobs:
+  test_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: greet
+        run: echo "hello everyone"
