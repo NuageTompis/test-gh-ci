@@ -1,7 +1,8 @@
 name: test gh actions
-on: [pull_request, push]:
-  branches:
-    - main
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test_caching:
