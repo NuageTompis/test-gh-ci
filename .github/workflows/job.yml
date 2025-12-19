@@ -30,7 +30,10 @@ jobs:
       - name: import openapi collection to bruno
         run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
       - name: log collection md5 hash
-        run: echo collection-output.json | md5sum
+        run: |
+          new_hash = "$(md5sum)"
+          echo "new hash =$(new_hash)"
+          echo "new hash =$(new_hash)" >> "$GITHUB_OUTPUT"
       - name: output-cache-miss
         if: steps.cache-nodejs-modules.outputs.cache-hit != 'true'
         run: echo "cache missed!"
@@ -39,3 +42,30 @@ jobs:
         run: echo "cache hit!"
       - name: echo variable
         run: echo "variable is -> $env_var"
+      - name: store hash for next job
+        run: echo collection-output.json | md5sum >> $GITHUB_OUTPUT
+
+  assert_if_should_generate:
+    runs-on: ubuntu-latest
+    needs: test-caching
+    steps:
+      - name: read hash
+        uses: actions/cache@v4
+        with:
+          path: ./bruno-collection-openapi-hash.txt
+          key: ${{ runner.os }}-bruno-openapi-hash-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bruno-openapi-hash-
+      - name: output-cache-miss
+        if: steps.read hash.outputs.cache-hit != 'true'
+        run: echo "cache missed!"
+      - name: output-cache-hit
+        if: steps.read hash.outputs.cache-hit == 'true'
+        run: |
+          echo "cache hit!"
+          touch ./bruno-collection-openapi-hash.txt # create new file hash if empty
+      - name: compare hashes
+        run: previous = md5sum ./bruno-collection-openapi-hash.txt
+          new = ${{needs.test-caching.output.new_hash}}
+          echo "previous $(previous)"
+          echo "new $(new)"
