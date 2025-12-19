@@ -63,7 +63,8 @@ jobs:
         if: steps.read hash.outputs.cache-hit == 'true'
         run: |
           echo "cache hit!"
-          touch ./bruno-collection-openapi-hash.txt # create new file hash if empty
+          # test comment
+          touch ./bruno-collection-openapi-hash.txt
       - name: compare hashes
         run: previous = md5sum ./bruno-collection-openapi-hash.txt
           new = ${{needs.test-caching.output.new_hash}}
