@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-env:
-  env_var: ${{ vars.TEST_REPO_VARIABLE }}
 
 jobs:
   test_caching:
@@ -39,8 +37,6 @@ jobs:
       - name: output-cache-hit
         if: steps.cache-nodejs-modules.outputs.cache-hit == 'true'
         run: echo "cache hit!"
-      - name: echo variable
-        run: echo "variable is -> $env_var"
 
   assert_if_should_generate:
     runs-on: ubuntu-latest
