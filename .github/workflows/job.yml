@@ -47,7 +47,7 @@ jobs:
 
   assert_if_should_generate:
     runs-on: ubuntu-latest
-    needs: test-caching
+    needs: test_caching
     steps:
       - name: read hash
         id: read-hash
