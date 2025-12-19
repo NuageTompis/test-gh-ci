@@ -50,6 +50,7 @@ jobs:
     needs: test-caching
     steps:
       - name: read hash
+        id: read-hash
         uses: actions/cache@v4
         with:
           path: ./bruno-collection-openapi-hash.txt
@@ -57,13 +58,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bruno-openapi-hash-
       - name: output-cache-miss
-        if: steps.read hash.outputs.cache-hit != 'true'
+        if: steps.read-hash.outputs.cache-hit != 'true'
         run: echo "cache missed!"
       - name: output-cache-hit
-        if: steps.read hash.outputs.cache-hit == 'true'
+        if: steps.read-hash.outputs.cache-hit == 'true'
         run: |
           echo "cache hit!"
-          # test comment
+          # create new file hash if empty
           touch ./bruno-collection-openapi-hash.txt
       - name: compare hashes
         run: previous = md5sum ./bruno-collection-openapi-hash.txt
