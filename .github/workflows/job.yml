@@ -29,9 +29,9 @@ jobs:
         run: ./bin/run.js
       - name: import openapi collection to bruno
         run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
-      - name: log collection md5 hash
+      - name: log and store collection md5 hash
         run: |
-          new_hash="$(md5sum)"
+          new_hash="$(md5sum collection-output.json)"
           echo "new hash =$(new_hash)"
           echo "new hash =$(new_hash)" >> "$GITHUB_OUTPUT"
       - name: output-cache-miss
@@ -42,8 +42,6 @@ jobs:
         run: echo "cache hit!"
       - name: echo variable
         run: echo "variable is -> $env_var"
-      - name: store hash for next job
-        run: echo collection-output.json | md5sum >> $GITHUB_OUTPUT
 
   assert_if_should_generate:
     runs-on: ubuntu-latest
