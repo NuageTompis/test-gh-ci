@@ -31,7 +31,7 @@ jobs:
         run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
       - name: log collection md5 hash
         run: |
-          new_hash = "$(md5sum)"
+          new_hash="$(md5sum)"
           echo "new hash =$(new_hash)"
           echo "new hash =$(new_hash)" >> "$GITHUB_OUTPUT"
       - name: output-cache-miss
@@ -67,7 +67,7 @@ jobs:
           # create new file hash if empty
           touch ./bruno-collection-openapi-hash.txt
       - name: compare hashes
-        run: previous = md5sum ./bruno-collection-openapi-hash.txt
+        run: previous=md5sum ./bruno-collection-openapi-hash.txt
           new = ${{needs.test-caching.output.new_hash}}
           echo "previous $(previous)"
           echo "new $(new)"
