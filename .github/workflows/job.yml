@@ -31,8 +31,8 @@ jobs:
         run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
       - name: log and store collection md5 hash
         run: |
-          new_hash="$(md5sum collection-output.json)"
-          echo "new_hash=$(new_hash)" >> "$GITHUB_OUTPUT"
+          new_hash="${md5sum collection-output.json}"
+          echo "new_hash=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: output-cache-miss
         if: steps.cache-nodejs-modules.outputs.cache-hit != 'true'
         run: echo "cache missed!"
@@ -66,5 +66,5 @@ jobs:
       - name: compare hashes
         run: previous=md5sum ./bruno-collection-openapi-hash.txt
           new=${{needs.test-caching.output.new_hash}}
-          echo "previous $(previous)"
-          echo "new $(new)"
+          echo "previous ${previous}"
+          echo "new ${new}"
