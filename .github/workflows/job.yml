@@ -26,10 +26,10 @@ jobs:
       - name: run
         run: ./bin/run.js
       - name: import openapi collection to bruno
-        run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection-output.json --collection-name "My API"
+        run: npx bru import openapi --source no-description-openapi-import-mre.json --output-file collection_output.json --collection-name "My API"
       - name: log and store collection md5 hash
         run: |
-          new_hash=`md5sum ${collection-output.json} | awk '{ print $1 }'`
+          new_hash=`md5sum ${collection_output.json} | awk '{ print $1 }'`
           echo "new_hash=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: output-cache-miss
         if: steps.cache-nodejs-modules.outputs.cache-hit != 'true'
