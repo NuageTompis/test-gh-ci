@@ -68,6 +68,6 @@ jobs:
       - name: compare hashes
         run: |
           previous="$(md5sum bruno-collection-openapi-hash.txt | awk '{ print $1 }')"
-          new="${{needs.test-caching.outputs.new_hash}}"
+          new="${{needs.test_caching.outputs.new_hash}}"
           echo "previous $previous"
           echo "new $new"
