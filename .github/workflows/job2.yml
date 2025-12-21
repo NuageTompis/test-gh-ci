@@ -16,6 +16,10 @@ on:
 # issues:
 # - if the cache was removed yet the collection is the same, this approach would re-generate the bruno collection
 
+# convention chosen:
+# snake_case for inter-job outputs
+# CAPITAL_SNAKE_CASE for intra-job outputs
+
 jobs:
   detect-changes:
     name: Detect changes
@@ -23,16 +27,40 @@ jobs:
     outputs:
       should_generate: ${{ steps.compare-hashes.outputs.should_generate }}
     steps:
+      - uses: actions/checkout@v4
       - name: Generate openapi collection
         run: echo "generating..."
+        # we simulate this with the collection-openapi.json file
+        # we will use cargo run -p <...> later on
       - name: Hash collection
-        run: echo "hashing..."
+        run: |
+          echo "hashing..."
+          # the 'print $1' with awk is used because the md5sum command outputs: <HASH> <FILE_NAME>
+          new_hash="$(md5sum collection-openapi.json | awk '{ print $1 }')" 
+          echo "NEW_HASH=${new_hash}" >> "$GITHUB_ENV"
+      - name: Cache previous hash
+        uses: actions/cache@v4
+        with:
+          path: ./collection-hash.txt
+          key: ${{ runner.os }}-openapi-hash-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-openapi-hash-
       - name: Retrieve previous hash
-        run: echo "retrieving..."
+        run: |
+          echo "retrieving..."
+          # Add collection hash if there was a cache miss
+          touch ./collection-hash.txt
+          prev_hash="$(md5sum collection-hash.txt | awk '{ print $1 }')" 
+          echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
       - name: Compare hashes
         id: compare-hashes
         run: |
           echo "comparing..."
+          if [[ "$PREV_HASH" = "$NEW_HASH" ]]; then
+            echo "yes - $PREV_HASH" 
+          else
+            echo "no - $NEW_HASH" 
+          fi
           should_generate=false
           echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
 
