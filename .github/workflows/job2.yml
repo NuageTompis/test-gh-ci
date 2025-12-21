@@ -59,19 +59,17 @@ jobs:
           prev_hash="$(md5sum ./collection-hash.txt | awk '{ print $1 }')" 
           echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
           echo "$NEW_HASH" > ./collection-hash.txt
-      - name: Generate Prime Numbers
-        if: steps.cache-previous-hash.outputs.cache-hit != 'true'
-        run: echo "cache missed"
+      # - name: Generate Prime Numbers
+      #   if: steps.cache-previous-hash.outputs.cache-hit != 'true'
+      #   run: echo "cache missed"
       - name: Compare hashes
         id: compare-hashes
         run: |
           echo "comparing..."
-          if [[ "$PREV_HASH" = "$NEW_HASH" ]]; then
-            echo "yes - $PREV_HASH == $NEW_HASH" 
+          if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} != 'true' ]]; then
             should_generate='false'
           else
             should_generate='true'
-            echo "no - $PREV_HASH != $NEW_HASH" 
           fi
           echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
 
