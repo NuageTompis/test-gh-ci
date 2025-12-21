@@ -1,0 +1,47 @@
+name: test gh action working
+on:
+  push:
+    branches:
+      - main
+
+# Steps:
+# - generate the collection in openapi format (using utoipa)
+# - hash it (-> new_hash)
+# - retrieve the previous hash (-> prev_hash)
+# - compare the two:
+#   - if they differ, run the second job:
+#     - generate the bruno collection
+#     - push to the Bruno repo
+
+# issues:
+# - if the cache was removed yet the collection is the same, this approach would re-generate the bruno collection
+
+jobs:
+  detect-changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      should_generate: ${{ steps.compare-hashes.outputs.should_generate }}
+    steps:
+      - name: Generate openapi collection
+        run: echo "generating..."
+      - name: Hash collection
+        run: echo "hashing..."
+      - name: Retrieve previous hash
+        run: echo "retrieving..."
+      - name: Compare hashes
+        id: compare-hashes
+        run: |
+          echo "comparing..."
+          should_generate=false
+          echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
+
+  generate-bruno-collection:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.should_generate == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Bruno collection
+        run: echo "generating..."
+      - name: Push to Bruno repository
+        run: echo "updating bruno repo..."
