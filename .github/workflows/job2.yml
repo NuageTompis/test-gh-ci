@@ -58,10 +58,11 @@ jobs:
           echo "comparing..."
           if [[ "$PREV_HASH" = "$NEW_HASH" ]]; then
             echo "yes - $PREV_HASH" 
+            should_generate='false'
           else
+            should_generate='true'
             echo "no - $NEW_HASH" 
           fi
-          should_generate=false
           echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
 
   generate-bruno-collection:
