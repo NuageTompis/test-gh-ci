@@ -42,7 +42,7 @@ jobs:
         id: cache-previous-hash
         uses: actions/cache@v4
         with:
-          path: ./collection-hash2.txt # this is not used nor exists but without something here github actions panics for some reason
+          path: src # this is not used nor exists but without something here github actions panics for some reason
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           lookup-only: true
       - name: Output should generate
