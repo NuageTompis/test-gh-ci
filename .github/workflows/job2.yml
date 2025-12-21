@@ -46,8 +46,6 @@ jobs:
         with:
           path: ./collection-hash.txt # this is not used nor exists but without something here github actions panics for some reason
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
-          restore-keys: |
-            ${{ runner.os }}-openapi-hash-
           lookup-only: true
       - name: Output should generate
         id: output-should-generate
