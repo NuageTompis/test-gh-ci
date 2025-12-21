@@ -46,7 +46,7 @@ jobs:
         id: cache-previous-hash
         uses: actions/cache@v4
         with:
-          path: ./collection-hash.txt
+          path: no-path-only-key
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
@@ -59,9 +59,6 @@ jobs:
           prev_hash="$(md5sum ./collection-hash.txt | awk '{ print $1 }')" 
           echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
           echo "$NEW_HASH" > ./collection-hash.txt
-      # - name: Generate Prime Numbers
-      #   if: steps.cache-previous-hash.outputs.cache-hit != 'true'
-      #   run: echo "cache missed"
       - name: Output should generate
         id: output-should-generate
         run: |
