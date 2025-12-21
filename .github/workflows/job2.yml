@@ -42,7 +42,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./collection-hash.txt
-          key: ${{ runner.os }}-openapi-hash-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-openapi-hash-$NEW_HASH
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
       - name: Retrieve previous hash
@@ -50,7 +50,7 @@ jobs:
           echo "retrieving..."
           # Add collection hash if there was a cache miss
           touch ./collection-hash.txt
-          prev_hash="$(md5sum collection-hash.txt | awk '{ print $1 }')" 
+          prev_hash="$(md5sum ./collection-hash.txt | awk '{ print $1 }')" 
           echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
           echo "$NEW_HASH" > ./collection-hash.txt
       - name: Compare hashes
