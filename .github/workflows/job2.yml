@@ -39,6 +39,7 @@ jobs:
           echo "hashing..."
           # the 'print $1' with awk is used because the md5sum command outputs: <HASH> <FILE_NAME>
           new_hash="$(md5sum collection-openapi.json | awk '{ print $1 }')" 
+          echo "$new_hash"
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_ENV"
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: Cache previous hash
