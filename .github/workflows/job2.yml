@@ -7,11 +7,9 @@ on:
 # Steps:
 # - generate the collection in openapi format (using utoipa)
 # - hash it (-> new_hash)
-# - retrieve the previous hash (-> prev_hash)
-# - compare the two:
-#   - if they differ, run the second job:
-#     - generate the bruno collection
-#     - push to the Bruno repo
+# - check if there is a corresponding cache entry. If not, run the second job:
+#   - generate the bruno collection
+#   - push to the Bruno repo
 
 # issues:
 # - if the cache was removed yet the collection is the same, this approach would re-generate the bruno collection
@@ -50,11 +48,9 @@ jobs:
       - name: Output should generate
         id: output-should-generate
         run: |
-          echo "comparing..."
           if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} == 'true' ]]; then
             should_generate='false'
           else
-            touch ./collection-hash.txt
             should_generate='true'
           fi
           echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
