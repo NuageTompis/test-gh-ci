@@ -39,26 +39,16 @@ jobs:
           echo "hashing..."
           # the 'print $1' with awk is used because the md5sum command outputs: <HASH> <FILE_NAME>
           new_hash="$(md5sum collection-openapi.json | awk '{ print $1 }')" 
-          echo "$new_hash"
-          echo "NEW_HASH=${new_hash}" >> "$GITHUB_ENV"
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: Cache previous hash
         id: cache-previous-hash
         uses: actions/cache@v4
         with:
-          path: ./collection-hash.txt
+          path: ./collection-hash.txt # this is not used nor exists but without something here github actions panics for some reason
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
           lookup-only: true
-      - name: Retrieve previous hash
-        run: |
-          echo "retrieving..."
-          # Add collection hash if there was a cache miss
-          touch ./collection-hash.txt
-          prev_hash="$(md5sum ./collection-hash.txt | awk '{ print $1 }')" 
-          echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
-          echo "$NEW_HASH" > ./collection-hash.txt
       - name: Output should generate
         id: output-should-generate
         run: |
@@ -66,6 +56,7 @@ jobs:
           if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} == 'true' ]]; then
             should_generate='false'
           else
+            touch ./collection-hash.txt
             should_generate='true'
           fi
           echo "should_generate=$should_generate" >> "$GITHUB_OUTPUT"
