@@ -66,7 +66,7 @@ jobs:
         id: output-should-generate
         run: |
           echo "comparing..."
-          if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} != 'true' ]]; then
+          if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} == 'true' ]]; then
             should_generate='false'
           else
             should_generate='true'
