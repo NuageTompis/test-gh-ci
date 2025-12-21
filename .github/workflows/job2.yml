@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_generate: ${{ steps.compare-hashes.outputs.should_generate }}
+      NEW_HASH: ${{ steps.compute-hash.outputs.NEW_HASH }}
     steps:
       - uses: actions/checkout@v4
       - name: Generate openapi collection
@@ -33,16 +34,18 @@ jobs:
         # we simulate this with the collection-openapi.json file
         # we will use cargo run -p <...> later on
       - name: Hash collection
+        id: compute-hash
         run: |
           echo "hashing..."
           # the 'print $1' with awk is used because the md5sum command outputs: <HASH> <FILE_NAME>
           new_hash="$(md5sum collection-openapi.json | awk '{ print $1 }')" 
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_ENV"
+          echo "NEW_HASH=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: Cache previous hash
         uses: actions/cache@v4
         with:
           path: ./collection-hash.txt
-          key: ${{ runner.os }}-openapi-hash-$NEW_HASH
+          key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
       - name: Retrieve previous hash
