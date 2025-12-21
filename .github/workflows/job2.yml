@@ -25,7 +25,7 @@ jobs:
     name: Detect changes
     runs-on: ubuntu-latest
     outputs:
-      should_generate: ${{ steps.compare-hashes.outputs.should_generate }}
+      should_generate: ${{ steps.output-should-generate.outputs.should_generate }}
       NEW_HASH: ${{ steps.compute-hash.outputs.NEW_HASH }}
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +62,8 @@ jobs:
       # - name: Generate Prime Numbers
       #   if: steps.cache-previous-hash.outputs.cache-hit != 'true'
       #   run: echo "cache missed"
-      - name: Compare hashes
-        id: compare-hashes
+      - name: Output should generate
+        id: output-should-generate
         run: |
           echo "comparing..."
           if [[ ${{ steps.cache-previous-hash.outputs.cache-hit }} != 'true' ]]; then
