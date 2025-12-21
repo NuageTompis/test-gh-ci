@@ -43,12 +43,14 @@ jobs:
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_ENV"
           echo "NEW_HASH=${new_hash}" >> "$GITHUB_OUTPUT"
       - name: Cache previous hash
+        id: cache-previous-hash
         uses: actions/cache@v4
         with:
           path: ./collection-hash.txt
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
+          lookup-only: true
       - name: Retrieve previous hash
         run: |
           echo "retrieving..."
@@ -57,6 +59,9 @@ jobs:
           prev_hash="$(md5sum ./collection-hash.txt | awk '{ print $1 }')" 
           echo "PREV_HASH=${prev_hash}" >> "$GITHUB_ENV"
           echo "$NEW_HASH" > ./collection-hash.txt
+      - name: Generate Prime Numbers
+        if: steps.cache-previous-hash.outputs.cache-hit != 'true'
+        run: echo "cache missed"
       - name: Compare hashes
         id: compare-hashes
         run: |
