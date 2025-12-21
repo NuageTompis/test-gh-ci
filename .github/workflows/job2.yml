@@ -46,7 +46,7 @@ jobs:
         id: cache-previous-hash
         uses: actions/cache@v4
         with:
-          path: no-path-only-key
+          path: ./no-path-only-key
           key: ${{ runner.os }}-openapi-hash-${{ steps.compute-hash.outputs.NEW_HASH }}
           restore-keys: |
             ${{ runner.os }}-openapi-hash-
