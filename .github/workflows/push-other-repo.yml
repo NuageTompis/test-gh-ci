@@ -45,11 +45,7 @@ jobs:
           # Check for changes
           git status
           # Commit changes (if any)
-          if git diff --quiet; then
-            echo "No changes to push."
-          else
-            git add data/report.txt
-            git commit -m "Update report.txt from source repo (commit: ${{ github.sha }})"
-            # Push to target branch
-            git push origin ${{ env.TARGET_BRANCH }}
-          fi
+          git add data/report.txt
+          git commit -m "Update report.txt from source repo (commit: ${{ github.sha }})"
+          # Push to target branch
+          git push origin ${{ env.TARGET_BRANCH }}
