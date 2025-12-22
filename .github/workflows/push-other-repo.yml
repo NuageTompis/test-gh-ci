@@ -1,0 +1,55 @@
+name: Test push to other repository
+on:
+  workflow_dispatch:
+
+env:
+  TARGET_REPO_OWNER: "NuageTompis"
+  TARGET_REPO_NAME: "test-gh-actions-destination"
+  TARGET_BRANCH: "main"
+
+jobs:
+  push_other_repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Clone target repository
+        run: |
+          # Clone the target repo (or create a new directory if it doesn't exist)
+          git clone https://github.com/${{ env.TARGET_REPO_OWNER }}/${{ env.TARGET_REPO_NAME }}.git target-repo
+          cd target-repo
+          # Overwrite the remote URL with the PAT for authentication
+          git remote set-url origin https://${{ secrets.TARGET_REPO_PAT }}@github.com/${{ env.TARGET_REPO_OWNER }}/${{ env.TARGET_REPO_NAME }}.git
+
+      - name: Generate report.txt in source repo
+        run: |
+          echo "Generated on: $(date)" > report.txt
+          echo "Source repo commit: ${{ github.sha }}" >> report.txt
+
+      - name: Copy content to target repo and push
+        run: |
+          # Create data directory in target repo (if it doesn't exist)
+          mkdir -p target-repo/data
+          # Copy report.txt from source to target repo's data/ directory
+          cp report.txt target-repo/data/
+          # Navigate to target repo
+          cd target-repo
+          # Check for changes
+          git status
+          # Commit changes (if any)
+          if git diff --quiet; then
+            echo "No changes to push."
+          else
+            git add data/report.txt
+            git commit -m "Update report.txt from source repo (commit: ${{ github.sha }})"
+            # Push to target branch
+            git push origin ${{ env.TARGET_BRANCH }}
+          fi
