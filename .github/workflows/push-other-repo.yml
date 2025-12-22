@@ -39,7 +39,8 @@ jobs:
       - name: Copy content to target repo and push
         run: |
           # Create data directory in target repo (if it doesn't exist)
-          mkdir -p target-repo/data
+          rm -r target-repo/data
+          mkdir target-repo/data
           # Copy report.txt from source to target repo's data/ directory
           cp report.txt target-repo/data/
           # Navigate to target repo
