@@ -45,10 +45,7 @@ jobs:
           cp report.txt target-repo/data/
           # Navigate to target repo
           cd target-repo
-          # Check for changes
-          git status
-          # Commit changes (if any)
-          git add data/report.txt
-          git commit -m "Update report.txt from source repo (commit: ${{ github.sha }})"
+          git add data/
+          git commit -m "Update data dir from source repo (commit: ${{ github.sha }})"
           # Push to target branch
           git push origin ${{ env.TARGET_BRANCH }}
