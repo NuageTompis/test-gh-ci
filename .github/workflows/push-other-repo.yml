@@ -35,6 +35,7 @@ jobs:
         run: |
           echo "Generated on: $(date)" > report.txt
           echo "Source repo commit: ${{ github.sha }}" >> report.txt
+          echo "A line that does not change to see git diff" >> report.txt
 
       - name: Copy content to target repo and push
         run: |
