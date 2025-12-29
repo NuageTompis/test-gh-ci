@@ -1,7 +1,9 @@
 name: Test scheduler
 on:
   schedule:
-    - cron: "23/10 * * * *"
+    - cron: "0 0 * * 1" # At 00:00 on every Monday.
+
+  workflow_dispatch:
 
 jobs:
   push_other_repo:
