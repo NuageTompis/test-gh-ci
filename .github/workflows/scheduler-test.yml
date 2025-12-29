@@ -1,8 +1,7 @@
 name: Test scheduler
 on:
   schedule:
-    - cron: "4 * * * *"
-  workflow_dispatch:
+    - cron: "1/10 * * * *"
 
 jobs:
   push_other_repo:
