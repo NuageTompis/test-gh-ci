@@ -1,0 +1,12 @@
+name: Test scheduler
+on:
+  schedule:
+    - cron: "4 * * * *"
+  workflow_dispatch:
+
+jobs:
+  push_other_repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greet
+        run: echo "hello"

@@ -1,8 +1,6 @@
 name: Test push to other repository
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   TARGET_REPO_OWNER: "NuageTompis"
